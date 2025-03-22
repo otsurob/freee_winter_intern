@@ -63,6 +63,7 @@ function App() {
         </table>
       </div>
       <button onClick={() => navigate("/calender")}>カレンダー</button>
+      <button onClick={() => navigate("/owner")}>オーナー画面</button>
     </div>
   );
 }

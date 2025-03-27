@@ -70,3 +70,61 @@ export async function postStampingInfo(employeeId:string, datetime:string, type:
     const responseJson = await response.json();
     return responseJson["employee_time_clock"]["type"];
 }
+
+// 従業員作成
+      // 良い感じに入力から受け取ってくれ
+      // フォームを使うのがよさそう
+export async function createEmployee(): Promise<string> {
+  const requestUrl = `${BASE_API_URL}/hr/api/v1/employees`;
+  const response = await fetch(requestUrl, getRequestOptions("POST", {
+    "company_id":COMPANY_ID,
+    "employee":{
+      "num":"A-123",
+      "working_hours_system_name":"shift",
+      "last_name":"苗字",
+      "first_name":"名前",
+      "last_name_kana":"ミョウジ",
+      "first_name_kana":"ナマエ",
+      "birth_date":"1990-01-01",
+      "entry_date":"2000-01-01",
+      "pay_calc_type":"monthly",
+      "pay_amount":300000
+    }
+  }));
+  console.log("success?");
+  const responseJson = await response.json();
+  return responseJson["employee"]["id"];
+}
+
+export async function putShift(employeeId:string, date:string, shift_in:string, shift_out:string): Promise<string> {
+  // date : YYYY-MM-DD
+  // shift_in : HH:MM
+  // shift_out : HH:MM
+  const requestUrl = `${BASE_API_URL}/hr/api/v1/employees/${employeeId}/work_records/${date}`;
+  const workMin = Number(shift_out.slice(0,2))*60+Number(shift_out.slice(3,5)) - (Number(shift_in.slice(0,2))*60+Number(shift_in.slice(3,5)));
+  console.log(workMin);
+  console.log(date+" "+shift_in+":00");
+  console.log(date+" "+shift_out+":00");
+  const response = await fetch(requestUrl, getRequestOptions("PUT", {
+    "company_id":COMPANY_ID,
+    "break_records":[
+      {
+        "clock_in_at":date+" "+"12:00:00",
+        "clock_out_at":date+" "+"13:00:00",
+      }
+    ],
+    "work_record_segments":[
+      {
+        "clock_in_at":date+" "+shift_in+":00",
+        "clock_out_at":date+" "+shift_out+":00",
+      }
+    ],
+    "day_pattern":"normal_day",
+    "normal_work_clock_in_at":date+" "+shift_in+":00",
+    "normal_work_clock_out_at":date+" "+shift_out+":00",
+    "normal_work_mins":workMin,
+    "use_default_work_pattern":false
+  }));
+  const responseJson = await response.json();
+  return responseJson["shift"]["id"];
+}

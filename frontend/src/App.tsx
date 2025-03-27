@@ -1,7 +1,8 @@
 // src/App.tsx
 import { useState, useEffect } from "react";
-import { getCompanyName, getEmployees } from "./api/freeeApi";
+import { createEmployee, getCompanyName, getEmployees } from "./api/freeeApi";
 import { useNavigate } from "react-router-dom";
+import { Button } from "./components/ui/button";
 
 interface Employee {
   id: number;
@@ -24,6 +25,12 @@ function App() {
   }, []);
 
   if (!companyName || !employees) return <div>Loading...</div>;
+
+  const test = async () => {
+    console.log("button is pushed");
+    const id = await createEmployee();
+    console.log(id);
+  };
 
   return (
     <div>
@@ -64,6 +71,7 @@ function App() {
       </div>
       <button onClick={() => navigate("/calender")}>カレンダー</button>
       <button onClick={() => navigate("/owner")}>オーナー画面</button>
+      <Button onClick={test}>テスト用</Button>
     </div>
   );
 }

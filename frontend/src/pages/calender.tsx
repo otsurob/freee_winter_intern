@@ -15,22 +15,23 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 // ■ 例: 出勤スケジュール (実際は API から取得などで動的に管理)
 const schedules = [
   {
     date: "2025-03-21",
     employees: [
-      { name: "Taro", shift: "09:00 - 17:00" },
-      { name: "Hanako", shift: "10:00 - 19:00" },
+      { name: "Taro", shift: "09:00-17:00" },
+      { name: "Hanako", shift: "10:00-19:00" },
     ],
   },
   {
     date: "2025-03-22",
     employees: [
-      { name: "Ken", shift: "13:00 - 22:00" },
-      { name: "Mike", shift: "00:00 - 08:00" },
-      { name: "Lucy", shift: "09:00 - 12:00" },
+      { name: "Ken", shift: "13:00-22:00" },
+      { name: "Mike", shift: "00:00-08:00" },
+      { name: "Lucy", shift: "09:00-12:00" },
     ],
   },
 ];
@@ -47,7 +48,7 @@ const TimeBar: React.FC<{ name: string; shift: string }> = ({
   shift,
 }) => {
   // 例: "09:00 - 17:00" -> [ "09:00", "17:00" ]
-  const [startTime, endTime] = shift.split(" - ");
+  const [startTime, endTime] = shift.split("-");
   // "09:00" -> ["09","00"]
   const [startH, startM] = startTime.split(":").map(Number);
   // "17:00" -> ["17","00"]
@@ -105,7 +106,7 @@ const Calendar = () => {
 
   return (
     <>
-      <button onClick={() => navigate("/")}>ホームへ</button>
+      <Button onClick={() => navigate("/")}>ホームへ</Button>
       {/* カレンダー本体 */}
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}

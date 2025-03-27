@@ -11,6 +11,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input"; // shadcn UIのInputコンポーネント
 import Header from "@/components/header";
 
 enum EmployeeStatus {
@@ -20,11 +21,19 @@ enum EmployeeStatus {
   None = "未打刻",
 }
 
-const Stamping = () => {
+const OnlineStamping = () => {
   const [searchParams] = useSearchParams();
   const [available, setAvailable] = useState<string[]>([]);
   const employeeId = searchParams.get("employeeId");
   const [targetType, setTargetType] = useState<string>("clock_in");
+
+  // 現在時刻を初期値に設定しておく
+  const now = new Date();
+  const initialDate = now.toISOString().split("T")[0]; // YYYY-MM-DD形式
+  const initialTime = now.toTimeString().slice(0, 5); // HH:MM形式
+
+  const [stampDate, setStampDate] = useState<string>(initialDate);
+  const [stampTime, setStampTime] = useState<string>(initialTime);
 
   useEffect(() => {
     async function fetchData() {
@@ -37,6 +46,7 @@ const Stamping = () => {
 
   async function stamping() {
     if (!employeeId) {
+      console.log("従業員IDがありません");
       return;
     }
     if (!available.includes(targetType)) {
@@ -44,14 +54,11 @@ const Stamping = () => {
       console.log("打刻種別が不正です");
       return;
     }
-    console.log("打刻開始！");
-    const datetime = new Date();
-    // 日付をYYYY-MM-DD形式に変換
-    const dateString = datetime.toISOString().split("T")[0];
 
-    // 時刻をHH:MM形式に変換
-    const timeString = datetime.toTimeString().slice(0, 5);
-    const datetimeString = dateString + " " + timeString;
+    // ユーザーが入力した日時を使って打刻
+    const datetimeString = stampDate + " " + stampTime;
+
+    console.log("オンライン打刻開始！", datetimeString);
     const stampingResponse = await postStampingInfo(
       employeeId,
       datetimeString,
@@ -91,7 +98,31 @@ const Stamping = () => {
           <CardTitle>打刻ページ</CardTitle>
         </CardHeader>
 
-        <Button onClick={stamping}>打刻する</Button>
+        {/* 日付の入力欄 */}
+        <div className="mb-4">
+          <Label htmlFor="stamp_date" className="mb-2 block">
+            日にち
+          </Label>
+          <Input
+            type="date"
+            id="stamp_date"
+            value={stampDate}
+            onChange={(e) => setStampDate(e.target.value)}
+          />
+        </div>
+
+        {/* 時刻の入力欄 */}
+        <div className="mb-4">
+          <Label htmlFor="stamp_time" className="mb-2 block">
+            時間
+          </Label>
+          <Input
+            type="time"
+            id="stamp_time"
+            value={stampTime}
+            onChange={(e) => setStampTime(e.target.value)}
+          />
+        </div>
 
         <div className="my-4">
           <Label htmlFor="target_type" className="mb-2 block">
@@ -113,7 +144,9 @@ const Stamping = () => {
           </Select>
         </div>
 
-        <div>現在の状態：{employeeStatus}</div>
+        <Button onClick={stamping}>オンラインで打刻する</Button>
+
+        <div className="mt-4">現在の状態：{employeeStatus}</div>
 
         <br />
         <Button onClick={test2}>テスト用2</Button>
@@ -122,4 +155,4 @@ const Stamping = () => {
   );
 };
 
-export default Stamping;
+export default OnlineStamping;

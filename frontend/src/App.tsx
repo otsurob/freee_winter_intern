@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { createEmployee, getCompanyName, getEmployees } from "./api/freeeApi";
 import { useNavigate } from "react-router-dom";
-import { Button } from "./components/ui/button";
+import { Container, Button } from "@chakra-ui/react";
 
 interface Employee {
   id: number;
@@ -33,7 +33,7 @@ function App() {
   };
 
   return (
-    <div>
+    <Container>
       {/* 事業所情報 */}
       <div>
         <h2>事業所情報</h2>
@@ -69,10 +69,10 @@ function App() {
           </tbody>
         </table>
       </div>
-      <button onClick={() => navigate("/calender")}>カレンダー</button>
-      <button onClick={() => navigate("/owner")}>オーナー画面</button>
+      <Button onClick={() => navigate("/calender")}>カレンダー</Button>
+      <Button onClick={() => navigate("/owner")}>オーナー画面</Button>
       <Button onClick={test}>テスト用</Button>
-    </div>
+    </Container>
   );
 }
 

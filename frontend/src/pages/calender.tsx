@@ -1,40 +1,33 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
-
-// shadcn/ui のDialog関連コンポーネントを import
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+
+// Chakra UI のインポート
+import { Button, Dialog, Portal, Text } from "@chakra-ui/react";
+import { getShiftData, ShiftData } from "@/api/gasApi";
 
 // ■ 例: 出勤スケジュール (実際は API から取得などで動的に管理)
-const schedules = [
-  {
-    date: "2025-03-21",
-    employees: [
-      { name: "Taro", shift: "09:00-17:00" },
-      { name: "Hanako", shift: "10:00-19:00" },
-    ],
-  },
-  {
-    date: "2025-03-22",
-    employees: [
-      { name: "Ken", shift: "13:00-22:00" },
-      { name: "Mike", shift: "00:00-08:00" },
-      { name: "Lucy", shift: "09:00-12:00" },
-    ],
-  },
-];
+// const dummySchedules: ShiftData[] = [
+//   {
+//     date: "2025-03-21",
+//     employees: [
+//       { name: "Taro", shift: "09:00-17:00" },
+//       { name: "Hanako", shift: "10:00-19:00" },
+//     ],
+//   },
+//   {
+//     date: "2025-03-22",
+//     employees: [
+//       { name: "Ken", shift: "13:00-22:00" },
+//       { name: "Mike", shift: "00:00-08:00" },
+//       { name: "Lucy", shift: "09:00-12:00" },
+//     ],
+//   },
+// ];
 
 // ■ 24時間の配列 (0 ~ 23)
 const hours = Array.from({ length: 24 }, (_, i) => i);
@@ -88,7 +81,21 @@ const TimeBar: React.FC<{ name: string; shift: string }> = ({
 const Calendar = () => {
   const [open, setOpen] = useState(false); // モーダル開閉状態
   const [clickedDate, setClickedDate] = useState(""); // クリックされた日付
+  const [schedules, setSchedules] = useState<ShiftData[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchData() {
+      const scheduleDatas = await getShiftData();
+      if (!scheduleDatas) {
+        return;
+      }
+      setSchedules(scheduleDatas);
+      // console.log(schedulesss);
+    }
+    fetchData();
+  }, []);
+
   // カレンダーの日付クリック時に呼ばれる
   const handleDateClick = useCallback((arg: DateClickArg) => {
     setClickedDate(arg.dateStr); // e.g. "2025-03-21"
@@ -106,7 +113,9 @@ const Calendar = () => {
 
   return (
     <>
+      {/* Chakra UI の Button に変更 */}
       <Button onClick={() => navigate("/")}>ホームへ</Button>
+
       {/* カレンダー本体 */}
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -114,99 +123,115 @@ const Calendar = () => {
         dateClick={handleDateClick}
       />
 
-      {/* shadcn/ui の Dialog */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        {/* 少し横幅を広げる & 高さを確保しておく */}
-        <DialogContent className="max-w-[900px] w-full h-[700px] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle>出勤予定</DialogTitle>
-            <DialogDescription>{clickedDate}</DialogDescription>
-          </DialogHeader>
+      {/* Chakra UI の Dialog に変更 */}
+      <Portal>
+        <Dialog.Root open={open} onOpenChange={() => setOpen(false)} size="xl">
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content
+              // shadcn/ui で使用していたクラスをスタイル指定に変更
+              style={{
+                maxWidth: "900px",
+                width: "100%",
+                height: "700px",
+                overflow: "hidden",
+              }}
+            >
+              <Dialog.Header>
+                出勤予定
+                {/* 日付をサブテキストとして表示 */}
+                <Text fontSize="sm" color="gray.500">
+                  {clickedDate}
+                </Text>
+              </Dialog.Header>
+              <Dialog.CloseTrigger />
 
-          {/* タイムライン全体を縦にも横にもスクロールさせたい */}
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              overflow: "auto", // 縦横両方向スクロール可能に
-              border: "1px solid #e2e8f0",
-              position: "relative",
-              backgroundColor: "#fff",
-            }}
-          >
-            {/* メインのコンテナをflexで横方向に展開する */}
-            <div style={{ display: "flex", minWidth: "700px" }}>
-              {/* ■ 左カラム: 時間ラベル (0:00 ~ 23:00) */}
-              <div
+              <Dialog.Body
+                // タイムライン全体を縦にも横にもスクロールさせたい
                 style={{
-                  flex: "0 0 60px", // 幅固定
-                  borderRight: "1px solid #e2e8f0",
+                  width: "100%",
+                  height: "100%",
+                  overflow: "auto", // 縦横両方向スクロール可能に
+                  border: "1px solid #e2e8f0",
                   position: "relative",
+                  backgroundColor: "#fff",
                 }}
               >
-                {/* 24時間分のラベル表示 */}
-                {hours.map((hour) => (
+                {/* メインのコンテナをflexで横方向に展開する */}
+                <div style={{ display: "flex", minWidth: "700px" }}>
+                  {/* ■ 左カラム: 時間ラベル (0:00 ~ 23:00) */}
                   <div
-                    key={hour}
                     style={{
-                      height: "50px",
-                      borderBottom: "1px solid #e2e8f0",
-                      padding: "4px",
-                      boxSizing: "border-box",
-                      fontSize: "12px",
-                      color: "#4a5568",
+                      flex: "0 0 60px", // 幅固定
+                      borderRight: "1px solid #e2e8f0",
+                      position: "relative",
                     }}
                   >
-                    {hour}:00
-                  </div>
-                ))}
-              </div>
-
-              {/* ■ 右カラム: 従業員ごとに列を並べる */}
-              <div
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  position: "relative",
-                }}
-              >
-                {employees.length > 0 ? (
-                  employees.map((emp, i) => {
-                    return (
+                    {/* 24時間分のラベル表示 */}
+                    {hours.map((hour) => (
                       <div
-                        key={i}
+                        key={hour}
                         style={{
-                          flex: "0 0 160px", // 各従業員の列の幅
-                          borderRight: "1px solid #e2e8f0",
-                          position: "relative",
-                          height: `${24 * 50}px`, // 24時間*1時間50px=1200px
+                          height: "50px",
+                          borderBottom: "1px solid #e2e8f0",
+                          padding: "4px",
+                          boxSizing: "border-box",
+                          fontSize: "12px",
+                          color: "#4a5568",
                         }}
                       >
-                        {/* 従業員の出勤バーを配置 */}
-                        <TimeBar name={emp.name} shift={emp.shift} />
+                        {hour}:00
                       </div>
-                    );
-                  })
-                ) : (
+                    ))}
+                  </div>
+
+                  {/* ■ 右カラム: 従業員ごとに列を並べる */}
                   <div
                     style={{
-                      padding: "8px",
-                      color: "#718096",
-                      fontSize: "14px",
+                      display: "flex",
+                      flex: 1,
+                      position: "relative",
                     }}
                   >
-                    この日の出勤予定はありません。
+                    {employees.length > 0 ? (
+                      employees.map((emp, i) => {
+                        return (
+                          <div
+                            key={i}
+                            style={{
+                              flex: "0 0 160px", // 各従業員の列の幅
+                              borderRight: "1px solid #e2e8f0",
+                              position: "relative",
+                              height: `${24 * 50}px`, // 24時間*1時間50px=1200px
+                            }}
+                          >
+                            {/* 従業員の出勤バーを配置 */}
+                            <TimeBar name={emp.name} shift={emp.shift} />
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div
+                        style={{
+                          padding: "8px",
+                          color: "#718096",
+                          fontSize: "14px",
+                        }}
+                      >
+                        この日の出勤予定はありません。
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
+                </div>
+              </Dialog.Body>
 
-          <DialogFooter>
-            {/* 必要に応じてボタンなどを配置してください */}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              <Dialog.Footer>
+                {/* 必要に応じてボタンなどを配置してください */}
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
+      </Portal>
     </>
   );
 };

@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getEmployeeStatus, postStampingInfo, putShift } from "../api/freeeApi";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input"; // shadcn UIのInputコンポーネント
-import Header from "@/components/header";
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  Heading,
+  Input,
+  Box,
+  Field,
+  NativeSelect,
+  Flex,
+} from "@chakra-ui/react";
 
 enum EmployeeStatus {
   working = "出勤中",
@@ -91,67 +92,67 @@ const OnlineStamping = () => {
   };
 
   return (
-    <>
-      <Header />
-      <Card>
+    <Flex
+      align="center"
+      justify="center"
+      h="100vh" /* 画面全体の高さを指定して中央寄せ */
+    >
+      <Card.Root maxW="lg" w="full">
         <CardHeader>
-          <CardTitle>打刻ページ</CardTitle>
+          <Heading size="md">打刻ページ</Heading>
         </CardHeader>
+        <CardBody>
+          {/* 日付の入力欄 */}
+          <Field.Root mb={4}>
+            <Field.Label htmlFor="stamp_date">日にち</Field.Label>
+            <Input
+              type="date"
+              id="stamp_date"
+              value={stampDate}
+              onChange={(e) => setStampDate(e.target.value)}
+            />
+          </Field.Root>
 
-        {/* 日付の入力欄 */}
-        <div className="mb-4">
-          <Label htmlFor="stamp_date" className="mb-2 block">
-            日にち
-          </Label>
-          <Input
-            type="date"
-            id="stamp_date"
-            value={stampDate}
-            onChange={(e) => setStampDate(e.target.value)}
-          />
-        </div>
+          {/* 時刻の入力欄 */}
+          <Field.Root mb={4}>
+            <Field.Label htmlFor="stamp_time">時間</Field.Label>
+            <Input
+              type="time"
+              id="stamp_time"
+              value={stampTime}
+              onChange={(e) => setStampTime(e.target.value)}
+            />
+          </Field.Root>
 
-        {/* 時刻の入力欄 */}
-        <div className="mb-4">
-          <Label htmlFor="stamp_time" className="mb-2 block">
-            時間
-          </Label>
-          <Input
-            type="time"
-            id="stamp_time"
-            value={stampTime}
-            onChange={(e) => setStampTime(e.target.value)}
-          />
-        </div>
+          {/* 打刻種別の選択欄 */}
+          <Field.Root mb={4}>
+            <Field.Label htmlFor="target_type">登録種別</Field.Label>
+            <NativeSelect.Root>
+              <NativeSelect.Field
+                id="target_type"
+                value={targetType}
+                onChange={(e) => setTargetType(e.target.value)}
+              >
+                <option value="clock_in">出勤</option>
+                <option value="break_begin">休憩開始</option>
+                <option value="break_end">休憩終了</option>
+                <option value="clock_out">退勤</option>
+              </NativeSelect.Field>
+            </NativeSelect.Root>
+          </Field.Root>
 
-        <div className="my-4">
-          <Label htmlFor="target_type" className="mb-2 block">
-            登録種別
-          </Label>
-          <Select
-            value={targetType}
-            onValueChange={(val) => setTargetType(val)}
-          >
-            <SelectTrigger id="target_type">
-              <SelectValue placeholder="打刻種別を選択" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="clock_in">出勤</SelectItem>
-              <SelectItem value="break_begin">休憩開始</SelectItem>
-              <SelectItem value="break_end">休憩終了</SelectItem>
-              <SelectItem value="clock_out">退勤</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          <Button onClick={stamping} colorScheme="blue">
+            オンラインで打刻する
+          </Button>
 
-        <Button onClick={stamping}>オンラインで打刻する</Button>
+          <Box mt={4}>現在の状態：{employeeStatus}</Box>
 
-        <div className="mt-4">現在の状態：{employeeStatus}</div>
-
-        <br />
-        <Button onClick={test2}>テスト用2</Button>
-      </Card>
-    </>
+          <Button mt={4} onClick={test2} colorScheme="green">
+            テスト用2
+          </Button>
+        </CardBody>
+      </Card.Root>
+    </Flex>
   );
 };
 

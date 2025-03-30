@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getEmployeeStatus, postStampingInfo, putShift } from "../api/freeeApi";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+
+// Chakra UI から必要なコンポーネントをimport
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import Header from "@/components/header";
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Heading,
+  Text,
+  Button,
+  Field,
+  NativeSelect,
+  Flex,
+} from "@chakra-ui/react";
 
 enum EmployeeStatus {
   working = "出勤中",
@@ -48,7 +51,6 @@ const Stamping = () => {
     const datetime = new Date();
     // 日付をYYYY-MM-DD形式に変換
     const dateString = datetime.toISOString().split("T")[0];
-
     // 時刻をHH:MM形式に変換
     const timeString = datetime.toTimeString().slice(0, 5);
     const datetimeString = dateString + " " + timeString;
@@ -84,41 +86,49 @@ const Stamping = () => {
   };
 
   return (
-    <>
-      <Header />
-      <Card>
+    <Flex
+      align="center"
+      justify="center"
+      h="100vh" /* 画面全体の高さを指定して中央寄せ */
+    >
+      <Card.Root maxW="md" w="full">
         <CardHeader>
-          <CardTitle>打刻ページ</CardTitle>
+          {/* shadcn/ui の CardTitle -> Chakra UI の Heading に変更 */}
+          <Heading size="md">打刻ページ</Heading>
         </CardHeader>
 
-        <Button onClick={stamping}>打刻する</Button>
+        <CardBody>
+          <Button onClick={stamping} colorScheme="blue" mb={4}>
+            打刻する
+          </Button>
 
-        <div className="my-4">
-          <Label htmlFor="target_type" className="mb-2 block">
-            登録種別
-          </Label>
-          <Select
-            value={targetType}
-            onValueChange={(val) => setTargetType(val)}
-          >
-            <SelectTrigger id="target_type">
-              <SelectValue placeholder="打刻種別を選択" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="clock_in">出勤</SelectItem>
-              <SelectItem value="break_begin">休憩開始</SelectItem>
-              <SelectItem value="break_end">休憩終了</SelectItem>
-              <SelectItem value="clock_out">退勤</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          {/* Label + Select を Chakra UI の FormControl + FormLabel + Select に置き換え */}
+          <Field.Root mb={4}>
+            <Field.Label htmlFor="targetType">登録種別</Field.Label>
+            <NativeSelect.Root>
+              <NativeSelect.Field
+                id="targetType"
+                value={targetType}
+                onChange={(e) => setTargetType(e.target.value)}
+              >
+                <option value="clock_in">出勤</option>
+                <option value="break_begin">休憩開始</option>
+                <option value="break_end">休憩終了</option>
+                <option value="clock_out">退勤</option>
+              </NativeSelect.Field>
+            </NativeSelect.Root>
+          </Field.Root>
 
-        <div>現在の状態：{employeeStatus}</div>
+          <Text>現在の状態：{employeeStatus}</Text>
+        </CardBody>
 
-        <br />
-        <Button onClick={test2}>テスト用2</Button>
-      </Card>
-    </>
+        <CardFooter>
+          <Button onClick={test2} colorScheme="teal">
+            テスト用2
+          </Button>
+        </CardFooter>
+      </Card.Root>
+    </Flex>
   );
 };
 

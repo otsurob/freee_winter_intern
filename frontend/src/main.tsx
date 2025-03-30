@@ -16,11 +16,11 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route element={<App />} path="/" />
-          {/* <Route element={<OnlineStamping />} path="/stamping" />
+          <Route element={<OnlineStamping />} path="/stamping" />
           <Route element={<Calender />} path="/calender" />
           <Route element={<StampingHome />} path="/owner/stampingHome" />
           <Route element={<Stamping />} path="/owner/stamping" />
-          <Route element={<Owner />} path="/owner" /> */}
+          <Route element={<Owner />} path="/owner" />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

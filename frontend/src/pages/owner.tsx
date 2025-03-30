@@ -1,17 +1,5 @@
 import Header from "@/components/header";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, Portal, Button, Input, Field } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -27,52 +15,82 @@ const Owner = () => {
       <Button onClick={() => navigate("/owner/stampingHome")}>
         打刻画面へ
       </Button>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline" onClick={() => setStep(1)}>
-            Edit Profile
-          </Button>
-        </DialogTrigger>
-        {step === 1 ? (
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Resister LINE Account</DialogTitle>
-              <DialogDescription>Read QR Code</DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button onClick={() => setStep(2)}>Next Page</Button>
-            </DialogFooter>
-          </DialogContent>
-        ) : (
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>従業員情報入力</DialogTitle>
-              <DialogDescription>情報を入力して下さい</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input id="name" className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Username
-                </Label>
-                <Input id="username" className="col-span-3" />
-              </div>
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" onClick={() => setStep(1)}>
-                  Close
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        )}
-      </Dialog>
+      <Portal>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <Button variant="outline" onClick={() => setStep(1)}>
+              Edit Profile
+            </Button>
+          </Dialog.Trigger>
+          {step === 1 ? (
+            <>
+              <Dialog.Backdrop />
+              <Dialog.Positioner>
+                <Dialog.Content className="sm:max-w-[425px]">
+                  <Dialog.Header>
+                    <Dialog.Title>Resister LINE Account</Dialog.Title>
+                    <Dialog.Description>Read QR Code</Dialog.Description>
+                  </Dialog.Header>
+                  <Dialog.Footer>
+                    <Button onClick={() => setStep(2)}>Next Page</Button>
+                  </Dialog.Footer>
+                </Dialog.Content>
+              </Dialog.Positioner>
+            </>
+          ) : (
+            <>
+              <Dialog.Backdrop />
+              <Dialog.Positioner>
+                <Dialog.Content>
+                  <Dialog.Header>
+                    <Dialog.Title>従業員情報入力</Dialog.Title>
+                    <Dialog.Description>
+                      情報を入力して下さい
+                    </Dialog.Description>
+                  </Dialog.Header>
+                  <Dialog.Body>
+                    <Field.Root>
+                      <Field.Label>
+                        LINE ID
+                        <Field.RequiredIndicator />
+                      </Field.Label>
+                      <Input placeholder="LINEメッセージで受け取ったIDを入力してください" />
+                      <Field.Label>
+                        氏名
+                        <Field.RequiredIndicator />
+                      </Field.Label>
+                      <Input placeholder="苗字と名前の間にはスペースを入れてください" />
+                      <Field.Label>
+                        氏名（フリガナ）
+                        <Field.RequiredIndicator />
+                      </Field.Label>
+                      <Input placeholder="苗字と名前の間にはスペースを入れてください" />
+                      <Field.Label>
+                        生年月日
+                        <Field.RequiredIndicator />
+                      </Field.Label>
+                      <Input type="date" />
+                      <Field.Label>
+                        入社日（本日の日付）
+                        <Field.RequiredIndicator />
+                      </Field.Label>
+                      <Input type="date" />
+                    </Field.Root>
+                    <Button>登録</Button>
+                  </Dialog.Body>
+                  <Dialog.Footer>
+                    <Dialog.CloseTrigger asChild>
+                      <Button type="button" onClick={() => setStep(1)}>
+                        Close
+                      </Button>
+                    </Dialog.CloseTrigger>
+                  </Dialog.Footer>
+                </Dialog.Content>
+              </Dialog.Positioner>
+            </>
+          )}
+        </Dialog.Root>
+      </Portal>
     </div>
   );
 };

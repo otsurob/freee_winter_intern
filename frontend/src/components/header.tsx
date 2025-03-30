@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
+import { Button, Container } from "@chakra-ui/react";
 
 const Header = () => {
   const navigate = useNavigate();
   return (
-    <Card>
+    <Container>
       <Button onClick={() => navigate("/")}>トップ</Button>
-    </Card>
+    </Container>
   );
 };
 

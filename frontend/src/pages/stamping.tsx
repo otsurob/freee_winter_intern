@@ -15,6 +15,7 @@ import {
   NativeSelect,
   Flex,
 } from "@chakra-ui/react";
+import { toaster } from "@/components/ui/toaster";
 
 enum EmployeeStatus {
   working = "出勤中",
@@ -43,8 +44,12 @@ const Stamping = () => {
       return;
     }
     if (!available.includes(targetType)) {
-      // 警告toastを表示
       console.log("打刻種別が不正です");
+      // 警告toastを表示
+      toaster.create({
+        title: "打刻種別が不正です",
+        type: "error",
+      });
       return;
     }
     console.log("打刻開始！");
@@ -123,9 +128,9 @@ const Stamping = () => {
         </CardBody>
 
         <CardFooter>
-          <Button onClick={test2} colorScheme="teal">
+          {/* <Button onClick={test2} colorScheme="teal">
             テスト用2
-          </Button>
+          </Button> */}
         </CardFooter>
       </Card.Root>
     </Flex>

@@ -5,29 +5,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { useNavigate } from "react-router-dom";
-
-// Chakra UI のインポート
 import { Button, Dialog, Portal, Text } from "@chakra-ui/react";
 import { getShiftData, ShiftData } from "@/api/gasApi";
-
-// ■ 例: 出勤スケジュール (実際は API から取得などで動的に管理)
-// const dummySchedules: ShiftData[] = [
-//   {
-//     date: "2025-03-21",
-//     employees: [
-//       { name: "Taro", shift: "09:00-17:00" },
-//       { name: "Hanako", shift: "10:00-19:00" },
-//     ],
-//   },
-//   {
-//     date: "2025-03-22",
-//     employees: [
-//       { name: "Ken", shift: "13:00-22:00" },
-//       { name: "Mike", shift: "00:00-08:00" },
-//       { name: "Lucy", shift: "09:00-12:00" },
-//     ],
-//   },
-// ];
 
 // ■ 24時間の配列 (0 ~ 23)
 const hours = Array.from({ length: 24 }, (_, i) => i);
@@ -91,7 +70,6 @@ const Calendar = () => {
         return;
       }
       setSchedules(scheduleDatas);
-      // console.log(schedulesss);
     }
     fetchData();
   }, []);
@@ -113,8 +91,10 @@ const Calendar = () => {
 
   return (
     <>
-      {/* Chakra UI の Button に変更 */}
       <Button onClick={() => navigate("/")}>ホームへ</Button>
+      <Button onClick={() => navigate("/calender/indivisual")}>
+        個人のカレンダーへ
+      </Button>
 
       {/* カレンダー本体 */}
       <FullCalendar
@@ -123,13 +103,11 @@ const Calendar = () => {
         dateClick={handleDateClick}
       />
 
-      {/* Chakra UI の Dialog に変更 */}
       <Portal>
         <Dialog.Root open={open} onOpenChange={() => setOpen(false)} size="xl">
           <Dialog.Backdrop />
           <Dialog.Positioner>
             <Dialog.Content
-              // shadcn/ui で使用していたクラスをスタイル指定に変更
               style={{
                 maxWidth: "900px",
                 width: "100%",
@@ -147,11 +125,11 @@ const Calendar = () => {
               <Dialog.CloseTrigger />
 
               <Dialog.Body
-                // タイムライン全体を縦にも横にもスクロールさせたい
+                // タイムライン全体を縦にも横にもスクロール可能にする
                 style={{
                   width: "100%",
                   height: "100%",
-                  overflow: "auto", // 縦横両方向スクロール可能に
+                  overflow: "auto",
                   border: "1px solid #e2e8f0",
                   position: "relative",
                   backgroundColor: "#fff",
@@ -224,10 +202,6 @@ const Calendar = () => {
                   </div>
                 </div>
               </Dialog.Body>
-
-              <Dialog.Footer>
-                {/* 必要に応じてボタンなどを配置してください */}
-              </Dialog.Footer>
             </Dialog.Content>
           </Dialog.Positioner>
         </Dialog.Root>

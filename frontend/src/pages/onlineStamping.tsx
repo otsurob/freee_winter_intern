@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getEmployeeStatus, postStampingInfo, putShift } from "../api/freeeApi";
+import { getEmployeeStatus, postStampingInfo } from "../api/freeeApi";
 
 import {
   Button,
@@ -14,6 +14,7 @@ import {
   NativeSelect,
   Flex,
 } from "@chakra-ui/react";
+import { onlineStamp } from "@/api/gasApi";
 
 enum EmployeeStatus {
   working = "出勤中",
@@ -86,9 +87,11 @@ const OnlineStamping = () => {
     if (!employeeId) {
       return;
     }
-    console.log("shift change");
-    const id = await putShift(employeeId, "2025-03-26", "09:00", "18:00");
-    console.log(id);
+    // console.log("shift change");
+    // const id = await putShift(employeeId, "2025-03-26", "09:00", "18:00");
+    // console.log(id);
+    console.log("counter");
+    await onlineStamp(employeeId);
   };
 
   return (
@@ -147,9 +150,9 @@ const OnlineStamping = () => {
 
           <Box mt={4}>現在の状態：{employeeStatus}</Box>
 
-          <Button mt={4} onClick={test2} colorScheme="green">
+          {/* <Button mt={4} onClick={test2} colorScheme="green">
             テスト用2
-          </Button>
+          </Button> */}
         </CardBody>
       </Card.Root>
     </Flex>

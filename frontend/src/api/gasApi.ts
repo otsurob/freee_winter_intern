@@ -1,5 +1,4 @@
-// api.ts
-import { SCHEDULE_API_URL } from "@/constants/constants";
+import { GAS_API_URL } from "@/constants/constants";
 
 /** 従業員ごとのシフト情報 */
 export interface EmployeeShift {
@@ -21,9 +20,6 @@ export interface NewScheduleData {
   shift: string;
 }
 
-// ----------------------------------------------------------------------
-// 1. GET/POST共通のオプション生成関数 (必要に応じて拡張してください)
-// ----------------------------------------------------------------------
 function getRequestOptions(method: "GET" | "POST"): RequestInit {
   return {
     method,
@@ -40,7 +36,7 @@ function getRequestOptions(method: "GET" | "POST"): RequestInit {
 export async function getShiftData(): Promise<ShiftData[] | null> {
   try {
     // "?action=getSchedules" をクエリパラメータに付与してGETリクエスト
-    const url = `${SCHEDULE_API_URL}?action=getSchedules`;
+    const url = `${GAS_API_URL}?action=getSchedules`;
     const response = await fetch(url, getRequestOptions("GET"));
 
     if (!response.ok) {
@@ -64,9 +60,9 @@ export async function getShiftData(): Promise<ShiftData[] | null> {
 export async function registerShiftData(newScheduleData: NewScheduleData): Promise<null> {
   try {
     // body に action と 実際に登録したいデータ(payload) を入れて送信
-    const response = await fetch(SCHEDULE_API_URL, {
+    const response = await fetch(GAS_API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
         action: "writeToSheet",
         payload: newScheduleData,
@@ -86,3 +82,23 @@ export async function registerShiftData(newScheduleData: NewScheduleData): Promi
     return null;
   }
 }
+
+
+export async function onlineStamp(employeeId:string): Promise<null> {
+    try {
+      // body に action と 実際に登録したいデータ(payload) を入れて送信
+      const response = await fetch(GAS_API_URL + "?employeeId=" + employeeId, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+      });
+  
+  
+      // GAS側からの結果メッセージなどを受け取る
+      const result = await response;
+      console.log(result);
+      return null;
+    } catch (error) {
+      console.error("Error registering shift data:", error);
+      return null;
+    }
+  }

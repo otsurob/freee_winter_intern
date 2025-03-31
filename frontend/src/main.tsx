@@ -9,6 +9,7 @@ import Owner from "./pages/owner.tsx";
 import OnlineStamping from "./pages/onlineStamping.tsx";
 import StampingHome from "./pages/stampingHome.tsx";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { Toaster } from "@/components/ui/toaster";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<Owner />} path="/owner" />
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </ChakraProvider>
   </StrictMode>
 );

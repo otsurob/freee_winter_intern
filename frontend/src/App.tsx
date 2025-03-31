@@ -96,7 +96,7 @@ function App() {
           <Button onClick={() => navigate("/owner")} mr={2}>
             オーナー画面
           </Button>
-          <Button onClick={test}>テスト用</Button>
+          {/* <Button onClick={test}>テスト用</Button> */}
         </Box>
       </Container>
     </Flex>

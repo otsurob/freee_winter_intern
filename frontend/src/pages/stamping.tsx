@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getEmployeeStatus, postStampingInfo, putShift } from "../api/freeeApi";
+import { getEmployeeStatus, postStampingInfo } from "../api/freeeApi";
 
 // Chakra UI から必要なコンポーネントをimport
 import {
@@ -81,15 +81,6 @@ const Stamping = () => {
     employeeStatus = EmployeeStatus.None;
   }
 
-  const test2 = async () => {
-    if (!employeeId) {
-      return;
-    }
-    console.log("shift change");
-    const id = await putShift(employeeId, "2025-03-26", "09:00", "18:00");
-    console.log(id);
-  };
-
   return (
     <Flex
       align="center"
@@ -127,11 +118,7 @@ const Stamping = () => {
           <Text>現在の状態：{employeeStatus}</Text>
         </CardBody>
 
-        <CardFooter>
-          {/* <Button onClick={test2} colorScheme="teal">
-            テスト用2
-          </Button> */}
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card.Root>
     </Flex>
   );

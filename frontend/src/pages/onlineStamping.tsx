@@ -66,6 +66,7 @@ const OnlineStamping = () => {
       datetimeString,
       targetType
     );
+    await onlineStamp(employeeId);
     console.log(stampingResponse);
   }
 
@@ -82,17 +83,6 @@ const OnlineStamping = () => {
   } else {
     employeeStatus = EmployeeStatus.None;
   }
-
-  const test2 = async () => {
-    if (!employeeId) {
-      return;
-    }
-    // console.log("shift change");
-    // const id = await putShift(employeeId, "2025-03-26", "09:00", "18:00");
-    // console.log(id);
-    console.log("counter");
-    await onlineStamp(employeeId);
-  };
 
   return (
     <Flex
@@ -149,10 +139,6 @@ const OnlineStamping = () => {
           </Button>
 
           <Box mt={4}>現在の状態：{employeeStatus}</Box>
-
-          {/* <Button mt={4} onClick={test2} colorScheme="green">
-            テスト用2
-          </Button> */}
         </CardBody>
       </Card.Root>
     </Flex>

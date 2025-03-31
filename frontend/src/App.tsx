@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useState, useEffect } from "react";
-import { createEmployee, getCompanyName, getEmployees } from "./api/freeeApi";
+import { getCompanyName, getEmployees } from "./api/freeeApi";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -33,12 +33,6 @@ function App() {
   }, []);
 
   if (!companyName || !employees) return <div>Loading...</div>;
-
-  const test = async () => {
-    console.log("button is pushed");
-    const id = await createEmployee();
-    console.log(id);
-  };
 
   return (
     <Flex
@@ -96,7 +90,6 @@ function App() {
           <Button onClick={() => navigate("/owner")} mr={2}>
             オーナー画面
           </Button>
-          {/* <Button onClick={test}>テスト用</Button> */}
         </Box>
       </Container>
     </Flex>

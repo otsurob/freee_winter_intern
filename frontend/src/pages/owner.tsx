@@ -7,6 +7,7 @@ import {
   Flex,
   Container,
   Image,
+  Heading,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,12 +22,9 @@ const Owner = () => {
     setStep(1);
   };
   return (
-    <Flex
-      align="center"
-      justify="center"
-      h="100vh" /* 画面全体の高さを指定して中央寄せ */
-    >
+    <Flex align="center" justify="center" h="100vh">
       <Container maxW="md" centerContent>
+        <Heading>オーナー画面</Heading>
         <Button onClick={() => navigate("/owner/stampingHome")}>
           打刻画面へ
         </Button>

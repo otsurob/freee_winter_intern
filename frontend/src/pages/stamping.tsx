@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getEmployeeStatus, postStampingInfo } from "../api/freeeApi";
-
-// Chakra UI から必要なコンポーネントをimport
 import {
   Card,
   CardHeader,
@@ -29,10 +27,13 @@ const Stamping = () => {
   const [available, setAvailable] = useState<string[]>([]);
   const employeeId = searchParams.get("employeeId");
   const [targetType, setTargetType] = useState<string>("clock_in");
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
       if (!employeeId) return;
+      // 打刻可能種別の取得
       const availables = await getEmployeeStatus(employeeId);
       setAvailable(availables);
     }
@@ -44,7 +45,6 @@ const Stamping = () => {
       return;
     }
     if (!available.includes(targetType)) {
-      console.log("打刻種別が不正です");
       // 警告toastを表示
       toaster.create({
         title: "打刻種別が不正です",
@@ -52,25 +52,31 @@ const Stamping = () => {
       });
       return;
     }
-    console.log("打刻開始！");
+
+    // 現在の日付を処理しやすい形に
     const datetime = new Date();
-    // 日付をYYYY-MM-DD形式に変換
     const dateString = datetime.toISOString().split("T")[0];
-    // 時刻をHH:MM形式に変換
     const timeString = datetime.toTimeString().slice(0, 5);
     const datetimeString = dateString + " " + timeString;
+    setIsUpdating(true);
     const stampingResponse = await postStampingInfo(
       employeeId,
       datetimeString,
       targetType
     );
     console.log(stampingResponse);
+    toaster.create({
+      title: "打刻しました",
+      type: "success",
+    });
+    navigate("/owner/stampingHome");
   }
 
   let employeeStatus: string = "";
   if (available.length === 0) {
     return <div>Loading...</div>;
   }
+  // 従業員の状態を設定
   if (available[0] === "break_begin") {
     employeeStatus = EmployeeStatus.working;
   } else if (available[0] === "break_end") {
@@ -82,14 +88,9 @@ const Stamping = () => {
   }
 
   return (
-    <Flex
-      align="center"
-      justify="center"
-      h="100vh" /* 画面全体の高さを指定して中央寄せ */
-    >
+    <Flex align="center" justify="center" h="100vh">
       <Card.Root maxW="md" w="full">
         <CardHeader>
-          {/* shadcn/ui の CardTitle -> Chakra UI の Heading に変更 */}
           <Heading size="md">打刻ページ</Heading>
         </CardHeader>
 
@@ -97,8 +98,7 @@ const Stamping = () => {
           <Button onClick={stamping} colorScheme="blue" mb={4}>
             打刻する
           </Button>
-
-          {/* Label + Select を Chakra UI の FormControl + FormLabel + Select に置き換え */}
+          {isUpdating ? <Heading size="md">処理中...</Heading> : <></>}
           <Field.Root mb={4}>
             <Field.Label htmlFor="targetType">登録種別</Field.Label>
             <NativeSelect.Root>
@@ -118,7 +118,11 @@ const Stamping = () => {
           <Text>現在の状態：{employeeStatus}</Text>
         </CardBody>
 
-        <CardFooter></CardFooter>
+        <CardFooter>
+          <Button onClick={() => navigate("/owner/stampingHome")}>
+            打刻画面へ戻る
+          </Button>
+        </CardFooter>
       </Card.Root>
     </Flex>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getEmployeeStatus, postStampingInfo } from "../api/freeeApi";
 
 import {
@@ -15,6 +15,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { onlineStamp } from "@/api/gasApi";
+import { toaster } from "@/components/ui/toaster";
 
 enum EmployeeStatus {
   working = "出勤中",
@@ -28,6 +29,7 @@ const OnlineStamping = () => {
   const [available, setAvailable] = useState<string[]>([]);
   const employeeId = searchParams.get("employeeId");
   const [targetType, setTargetType] = useState<string>("clock_in");
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   // 現在時刻を初期値に設定しておく
   const now = new Date();
@@ -36,6 +38,8 @@ const OnlineStamping = () => {
 
   const [stampDate, setStampDate] = useState<string>(initialDate);
   const [stampTime, setStampTime] = useState<string>(initialTime);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -49,18 +53,23 @@ const OnlineStamping = () => {
   async function stamping() {
     if (!employeeId) {
       console.log("従業員IDがありません");
+      navigate("/");
       return;
     }
     if (!available.includes(targetType)) {
       // 警告toastを表示
-      console.log("打刻種別が不正です");
+      toaster.create({
+        title: "打刻種別が不正です",
+        type: "error",
+      });
       return;
     }
+
+    setIsUpdating(true);
 
     // ユーザーが入力した日時を使って打刻
     const datetimeString = stampDate + " " + stampTime;
 
-    console.log("オンライン打刻開始！", datetimeString);
     const stampingResponse = await postStampingInfo(
       employeeId,
       datetimeString,
@@ -68,6 +77,11 @@ const OnlineStamping = () => {
     );
     await onlineStamp(employeeId);
     console.log(stampingResponse);
+    toaster.create({
+      title: "打刻しました",
+      type: "success",
+    });
+    navigate("/");
   }
 
   let employeeStatus: string = "";
@@ -85,17 +99,12 @@ const OnlineStamping = () => {
   }
 
   return (
-    <Flex
-      align="center"
-      justify="center"
-      h="100vh" /* 画面全体の高さを指定して中央寄せ */
-    >
+    <Flex align="center" justify="center" h="100vh">
       <Card.Root maxW="lg" w="full">
         <CardHeader>
-          <Heading size="md">打刻ページ</Heading>
+          <Heading size="md">オンライン打刻ページ</Heading>
         </CardHeader>
         <CardBody>
-          {/* 日付の入力欄 */}
           <Field.Root mb={4}>
             <Field.Label htmlFor="stamp_date">日にち</Field.Label>
             <Input
@@ -106,7 +115,6 @@ const OnlineStamping = () => {
             />
           </Field.Root>
 
-          {/* 時刻の入力欄 */}
           <Field.Root mb={4}>
             <Field.Label htmlFor="stamp_time">時間</Field.Label>
             <Input
@@ -117,7 +125,6 @@ const OnlineStamping = () => {
             />
           </Field.Root>
 
-          {/* 打刻種別の選択欄 */}
           <Field.Root mb={4}>
             <Field.Label htmlFor="target_type">登録種別</Field.Label>
             <NativeSelect.Root>
@@ -137,6 +144,7 @@ const OnlineStamping = () => {
           <Button onClick={stamping} colorScheme="blue">
             オンラインで打刻する
           </Button>
+          {isUpdating ? <Heading size="md">処理中...</Heading> : <></>}
 
           <Box mt={4}>現在の状態：{employeeStatus}</Box>
         </CardBody>

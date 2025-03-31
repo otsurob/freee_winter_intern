@@ -31,16 +31,11 @@ const StampingHome = () => {
     fetchData();
   }, []);
 
-  if (!companyName || !employees) return <div>Loading...!</div>;
+  if (!companyName || !employees) return <div>Loading...</div>;
 
   return (
-    <Flex
-      align="center"
-      justify="center"
-      h="100vh" /* 画面全体の高さを指定して中央寄せ */
-    >
+    <Flex align="center" justify="center" h="100vh">
       <Container maxW="md" centerContent>
-        {/* 事業所情報 */}
         <Box mb={8}>
           <Heading as="h2" size="lg" mb={4}>
             事業所情報
@@ -50,7 +45,6 @@ const StampingHome = () => {
           </Text>
         </Box>
 
-        {/* 従業員一覧 */}
         <Box mb={6} w="full">
           <Heading as="h3" size="md" mb={2}>
             従業員一覧

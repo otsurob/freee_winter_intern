@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Dialog, Portal, Text } from "@chakra-ui/react";
 import { getShiftData, ShiftData } from "@/api/gasApi";
 
-// ■ 24時間の配列 (0 ~ 23)
+// 24時間の配列 (0 ~ 23)
 const hours = Array.from({ length: 24 }, (_, i) => i);
 
 /**
@@ -19,11 +19,9 @@ const TimeBar: React.FC<{ name: string; shift: string }> = ({
   name,
   shift,
 }) => {
-  // 例: "09:00 - 17:00" -> [ "09:00", "17:00" ]
+  // 17:00-19:00 を それぞれ分割する処理
   const [startTime, endTime] = shift.split("-");
-  // "09:00" -> ["09","00"]
   const [startH, startM] = startTime.split(":").map(Number);
-  // "17:00" -> ["17","00"]
   const [endH, endM] = endTime.split(":").map(Number);
 
   const HOUR_HEIGHT = 50; // 1時間の高さ(px)
@@ -74,9 +72,9 @@ const Calendar = () => {
     fetchData();
   }, []);
 
-  // カレンダーの日付クリック時に呼ばれる
+  // カレンダーの日付クリック時に呼ばれる関数
   const handleDateClick = useCallback((arg: DateClickArg) => {
-    setClickedDate(arg.dateStr); // e.g. "2025-03-21"
+    setClickedDate(arg.dateStr);
     setOpen(true);
   }, []);
 
@@ -86,15 +84,11 @@ const Calendar = () => {
     employees: [],
   };
 
-  // 従業員リスト
   const employees = daySchedule.employees;
 
   return (
     <>
       <Button onClick={() => navigate("/")}>ホームへ</Button>
-      <Button onClick={() => navigate("/calender/indivisual")}>
-        個人のカレンダーへ
-      </Button>
 
       {/* カレンダー本体 */}
       <FullCalendar
@@ -163,7 +157,7 @@ const Calendar = () => {
                     ))}
                   </div>
 
-                  {/* ■ 右カラム: 従業員ごとに列を並べる */}
+                  {/* 右カラム: 従業員ごとに列を並べる */}
                   <div
                     style={{
                       display: "flex",
@@ -180,10 +174,9 @@ const Calendar = () => {
                               flex: "0 0 160px", // 各従業員の列の幅
                               borderRight: "1px solid #e2e8f0",
                               position: "relative",
-                              height: `${24 * 50}px`, // 24時間*1時間50px=1200px
+                              height: `${24 * 50}px`,
                             }}
                           >
-                            {/* 従業員の出勤バーを配置 */}
                             <TimeBar name={emp.name} shift={emp.shift} />
                           </div>
                         );

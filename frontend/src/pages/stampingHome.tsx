@@ -10,11 +10,7 @@ import {
   Table,
   Text,
 } from "@chakra-ui/react";
-
-interface Employee {
-  id: number;
-  display_name: string;
-}
+import { Employee } from "@/types/types";
 
 const StampingHome = () => {
   const [companyName, setCompanyName] = useState<string>("");

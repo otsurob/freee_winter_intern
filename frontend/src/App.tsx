@@ -11,11 +11,8 @@ import {
   Text,
   Table,
 } from "@chakra-ui/react";
-
-interface Employee {
-  id: number;
-  display_name: string;
-}
+import Loading from "./components/loading";
+import { Employee } from "./types/types";
 
 function App() {
   const [companyName, setCompanyName] = useState<string>("");
@@ -32,7 +29,7 @@ function App() {
     fetchData();
   }, []);
 
-  if (!companyName || !employees) return <div>Loading...</div>;
+  if (!companyName || !employees) return <Loading />;
 
   return (
     <Flex

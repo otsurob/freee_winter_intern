@@ -1,13 +1,11 @@
 // src/api/freeeApi.ts
+import { ResisterInfo } from "@/pages/owner";
 import { COMPANY_ID, ACCESS_TOKEN, BASE_API_URL } from "../constants/constants";
+import { Employee } from "@/types/types";
 
 // const API_BASE_URL = "https://api.freee.co.jp";
 
 // **型定義**
-export interface Employee {
-  id: number;
-  display_name: string;
-}
 
 export interface Company {
   company_id: number;
@@ -72,20 +70,19 @@ export async function postStampingInfo(employeeId:string, datetime:string, type:
 }
 
 // 従業員作成
-// 未完成
-export async function createEmployee(): Promise<string> {
+export async function createEmployee(resisterEmp:ResisterInfo): Promise<string> {
   const requestUrl = `${BASE_API_URL}/hr/api/v1/employees`;
   const response = await fetch(requestUrl, getRequestOptions("POST", {
     "company_id":COMPANY_ID,
     "employee":{
-      "num":"A-123",
-      "working_hours_system_name":"shift",
-      "last_name":"苗字",
-      "first_name":"名前",
-      "last_name_kana":"ミョウジ",
-      "first_name_kana":"ナマエ",
-      "birth_date":"1990-01-01",
-      "entry_date":"2000-01-01",
+      "num":resisterEmp.lineId,
+      "working_hours_system_name":"first test",
+      "last_name":resisterEmp.lastName,
+      "first_name":resisterEmp.firstName,
+      "last_name_kana":resisterEmp.lastNameLabel,
+      "first_name_kana":resisterEmp.firstNameLabel,
+      "birth_date":resisterEmp.birthDate,
+      "entry_date":resisterEmp.entryDate,
       "pay_calc_type":"monthly",
       "pay_amount":300000
     }
@@ -93,4 +90,12 @@ export async function createEmployee(): Promise<string> {
   console.log("success?");
   const responseJson = await response.json();
   return responseJson["employee"]["id"];
+}
+
+// 月の勤怠情報サマリ
+export async function getMonthSummary(employeeId:string, year:number, month:number): Promise<number> {
+  const requestUrl = `${BASE_API_URL}/hr/api/v1/employees/${employeeId}/work_record_summary/${year}/${month}?company_id=${COMPANY_ID}&year=${year}&month=${month}`;
+  const response = await fetch(requestUrl, getRequestOptions("GET"));
+  const responseJson = await response.json();
+  return responseJson["total_normal_work_mins"];
 }

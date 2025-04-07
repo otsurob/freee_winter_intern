@@ -10,6 +10,7 @@ import OnlineStamping from "./pages/onlineStamping.tsx";
 import StampingHome from "./pages/stampingHome.tsx";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
+import CheckWorkTime from "./pages/checkWorkTime.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<StampingHome />} path="/owner/stampingHome" />
           <Route element={<Stamping />} path="/owner/stamping" />
           <Route element={<Owner />} path="/owner" />
+          <Route element={<CheckWorkTime />} path="/checkWorkTime" />
         </Routes>
       </BrowserRouter>
       <Toaster />

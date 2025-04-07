@@ -94,7 +94,7 @@ export async function createEmployee(resisterEmp:ResisterInfo): Promise<string> 
 
 // 月の勤怠情報サマリ
 export async function getMonthSummary(employeeId:string, year:number, month:number): Promise<number> {
-  const requestUrl = `${BASE_API_URL}/hr/api/v1/employees/${employeeId}/work_record_summary/${year}/${month}?company_id=${COMPANY_ID}&year=${year}&month=${month}`;
+  const requestUrl = `${BASE_API_URL}/hr/api/v1/employees/${employeeId}/work_record_summaries/${year}/${month}?company_id=${COMPANY_ID}`;
   const response = await fetch(requestUrl, getRequestOptions("GET"));
   const responseJson = await response.json();
   return responseJson["total_normal_work_mins"];

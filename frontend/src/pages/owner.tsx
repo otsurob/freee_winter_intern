@@ -1,3 +1,5 @@
+import { createEmployee } from "@/api/freeeApi";
+import { toaster } from "@/components/ui/toaster";
 import {
   Dialog,
   Portal,
@@ -8,25 +10,61 @@ import {
   Container,
   Image,
   Heading,
+  Box,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+export type ResisterInfo = {
+  lineId: string;
+  lastName: string;
+  firstName: string;
+  lastNameLabel: string;
+  firstNameLabel: string;
+  birthDate: string;
+  entryDate: string;
+};
+
 const Owner = () => {
   const [step, setStep] = useState(1);
   const [open, setOpen] = useState(false);
+  const [isResistering, setIsResistering] = useState(false);
+  const [resisterEmp, setResisterEmp] = useState<ResisterInfo>({
+    lineId: "",
+    lastName: "",
+    firstName: "",
+    lastNameLabel: "",
+    firstNameLabel: "",
+    birthDate: "",
+    entryDate: "",
+  });
   const navigate = useNavigate();
 
   const resisterButton = () => {
     setOpen(true);
     setStep(1);
   };
+
+  const resisterEmployee = async () => {
+    setIsResistering(true);
+    const newEmpId = await createEmployee(resisterEmp);
+    console.log(newEmpId);
+    toaster.create({
+      title: "登録が完了しました",
+      description: "従業員ID:" + newEmpId,
+      type: "success",
+    });
+    setOpen(false);
+  };
   return (
     <Flex align="center" justify="center" h="100vh">
-      <Container maxW="md" centerContent>
+      <Container maxW="md" centerContent gap="20px">
         <Heading>オーナー画面</Heading>
         <Button onClick={() => navigate("/owner/stampingHome")}>
-          打刻画面へ
+          打刻画面
+        </Button>
+        <Button onClick={() => navigate("/checkWorkTime")}>
+          月次勤怠時間画面
         </Button>
         <Button onClick={resisterButton}>新規従業員登録</Button>
         <Portal>
@@ -63,34 +101,101 @@ const Owner = () => {
                       </Dialog.Description>
                     </Dialog.Header>
                     <Dialog.Body>
-                      <Field.Root>
+                      <Field.Root required gap="10px">
                         <Field.Label>
                           LINE ID
                           <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input placeholder="LINEメッセージで受け取ったIDを入力してください" />
+                        <Input
+                          placeholder="LINEメッセージで受け取ったIDを入力してください"
+                          onChange={(e) =>
+                            setResisterEmp({
+                              ...resisterEmp,
+                              lineId: e.target.value,
+                            })
+                          }
+                        />
                         <Field.Label>
                           氏名
                           <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input placeholder="苗字と名前の間にはスペースを入れてください" />
+                        <Box display="flex" flexDirection="row" gap="8px">
+                          <Input
+                            placeholder="苗字"
+                            onChange={(e) =>
+                              setResisterEmp({
+                                ...resisterEmp,
+                                lastName: e.target.value,
+                              })
+                            }
+                          />
+                          <Input
+                            placeholder="名前"
+                            onChange={(e) =>
+                              setResisterEmp({
+                                ...resisterEmp,
+                                firstName: e.target.value,
+                              })
+                            }
+                          />
+                        </Box>
                         <Field.Label>
                           氏名（フリガナ）
                           <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input placeholder="苗字と名前の間にはスペースを入れてください" />
+                        <Box display="flex" flexDirection="row" gap="8px">
+                          <Input
+                            placeholder="苗字"
+                            onChange={(e) =>
+                              setResisterEmp({
+                                ...resisterEmp,
+                                lastNameLabel: e.target.value,
+                              })
+                            }
+                          />
+                          <Input
+                            placeholder="名前"
+                            onChange={(e) =>
+                              setResisterEmp({
+                                ...resisterEmp,
+                                firstNameLabel: e.target.value,
+                              })
+                            }
+                          />
+                        </Box>
                         <Field.Label>
                           生年月日
                           <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input type="date" />
+                        <Input
+                          type="date"
+                          onChange={(e) =>
+                            setResisterEmp({
+                              ...resisterEmp,
+                              birthDate: e.target.value,
+                            })
+                          }
+                        />
                         <Field.Label>
                           入社日（本日の日付）
                           <Field.RequiredIndicator />
                         </Field.Label>
-                        <Input type="date" />
+                        <Input
+                          type="date"
+                          onChange={(e) =>
+                            setResisterEmp({
+                              ...resisterEmp,
+                              entryDate: e.target.value,
+                            })
+                          }
+                        />
                       </Field.Root>
-                      <Button>登録</Button>
+                      <Button onClick={resisterEmployee}>登録</Button>
+                      {isResistering ? (
+                        <Heading size="md">登録処理中...</Heading>
+                      ) : (
+                        <></>
+                      )}
                     </Dialog.Body>
                     <Dialog.Footer>
                       <Dialog.CloseTrigger asChild>

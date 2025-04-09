@@ -11,6 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Employee } from "@/types/types";
+import Loading from "@/components/loading";
 
 const StampingHome = () => {
   const [companyName, setCompanyName] = useState<string>("");
@@ -27,7 +28,7 @@ const StampingHome = () => {
     fetchData();
   }, []);
 
-  if (!companyName || !employees) return <div>Loading...</div>;
+  if (!companyName || !employees) return <Loading />;
 
   return (
     <Flex align="center" justify="center" h="100vh">

@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { onlineStamp } from "@/api/gasApi";
 import { toaster } from "@/components/ui/toaster";
+import Loading from "@/components/loading";
 
 enum EmployeeStatus {
   working = "出勤中",
@@ -86,7 +87,7 @@ const OnlineStamping = () => {
 
   let employeeStatus: string = "";
   if (available.length === 0) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   if (available[0] === "break_begin") {
     employeeStatus = EmployeeStatus.working;

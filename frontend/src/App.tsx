@@ -29,6 +29,12 @@ function App() {
     fetchData();
   }, []);
 
+  function employeeClick(employeeId: string, employeeName: string) {
+    if (window.confirm(`${employeeName}さんの打刻画面に移動しますか？`)) {
+      navigate(`/stamping?employeeId=${employeeId}`);
+    }
+  }
+
   if (!companyName || !employees) return <Loading />;
 
   return (
@@ -66,7 +72,7 @@ function App() {
                   <Table.Cell>
                     <Button
                       onClick={() =>
-                        navigate(`/stamping?employeeId=${employee.id}`)
+                        employeeClick(employee.id, employee.display_name)
                       }
                     >
                       {employee.id}

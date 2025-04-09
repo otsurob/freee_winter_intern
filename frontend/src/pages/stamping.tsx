@@ -57,7 +57,10 @@ const Stamping = () => {
 
     // 現在の日付を処理しやすい形に
     const datetime = new Date();
-    const dateString = datetime.toISOString().split("T")[0];
+    const dateString = datetime
+      .toLocaleString("en-CA")
+      .split("T")[0]
+      .split(", ")[0];
     const timeString = datetime.toTimeString().slice(0, 5);
     const datetimeString = dateString + " " + timeString;
     setIsUpdating(true);

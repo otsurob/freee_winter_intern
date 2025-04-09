@@ -36,7 +36,7 @@ const OnlineStamping = () => {
 
   // 現在時刻を初期値に設定しておく
   const now = new Date();
-  const initialDate = now.toISOString().split("T")[0]; // YYYY-MM-DD形式
+  const initialDate = now.toLocaleString("en-CA").split("T")[0].split(", ")[0]; // YYYY-MM-DD形式
   const initialTime = now.toTimeString().slice(0, 5); // HH:MM形式
 
   const [stampDate, setStampDate] = useState<string>(initialDate);

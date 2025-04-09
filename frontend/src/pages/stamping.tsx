@@ -27,6 +27,7 @@ const Stamping = () => {
   const [searchParams] = useSearchParams();
   const [available, setAvailable] = useState<string[]>([]);
   const employeeId = searchParams.get("employeeId");
+  const employeeName = searchParams.get("employeeName");
   const [targetType, setTargetType] = useState<string>("clock_in");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ const Stamping = () => {
     <Flex align="center" justify="center" h="100vh">
       <Card.Root maxW="md" w="full">
         <CardHeader>
-          <Heading size="md">打刻ページ</Heading>
+          <Heading size="md">{employeeName} さんの打刻ページ</Heading>
         </CardHeader>
 
         <CardBody>

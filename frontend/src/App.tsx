@@ -31,7 +31,9 @@ function App() {
 
   function employeeClick(employeeId: string, employeeName: string) {
     if (window.confirm(`${employeeName}さんの打刻画面に移動しますか？`)) {
-      navigate(`/stamping?employeeId=${employeeId}`);
+      navigate(
+        `/stamping?employeeId=${employeeId}&employeeName=${employeeName}`
+      );
     }
   }
 

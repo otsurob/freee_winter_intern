@@ -13,6 +13,7 @@ import {
   Field,
   NativeSelect,
   Flex,
+  CardFooter,
 } from "@chakra-ui/react";
 import { onlineStamp } from "@/api/gasApi";
 import { toaster } from "@/components/ui/toaster";
@@ -29,6 +30,7 @@ const OnlineStamping = () => {
   const [searchParams] = useSearchParams();
   const [available, setAvailable] = useState<string[]>([]);
   const employeeId = searchParams.get("employeeId");
+  const employeeName = searchParams.get("employeeName");
   const [targetType, setTargetType] = useState<string>("clock_in");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
@@ -103,7 +105,7 @@ const OnlineStamping = () => {
     <Flex align="center" justify="center" h="100vh">
       <Card.Root maxW="lg" w="full">
         <CardHeader>
-          <Heading size="md">オンライン打刻ページ</Heading>
+          <Heading size="md">{employeeName} さんのオンライン打刻ページ</Heading>
         </CardHeader>
         <CardBody>
           <Field.Root mb={4}>
@@ -149,6 +151,9 @@ const OnlineStamping = () => {
 
           <Box mt={4}>現在の状態：{employeeStatus}</Box>
         </CardBody>
+        <CardFooter>
+          <Button onClick={() => navigate("/")}>ホームへ戻る</Button>
+        </CardFooter>
       </Card.Root>
     </Flex>
   );

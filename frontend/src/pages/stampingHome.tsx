@@ -28,6 +28,14 @@ const StampingHome = () => {
     fetchData();
   }, []);
 
+  function employeeClick(employeeId: string, employeeName: string) {
+    if (window.confirm(`${employeeName}さんの打刻画面に移動しますか？`)) {
+      navigate(
+        `/owner/stamping?employeeId=${employeeId}&employeeName=${employeeName}`
+      );
+    }
+  }
+
   if (!companyName || !employees) return <Loading />;
 
   return (
@@ -59,7 +67,7 @@ const StampingHome = () => {
                   <Table.Cell>
                     <Button
                       onClick={() =>
-                        navigate(`/owner/stamping?employeeId=${employee.id}`)
+                        employeeClick(employee.id, employee.display_name)
                       }
                     >
                       {employee.id}

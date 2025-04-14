@@ -67,6 +67,7 @@ const Owner = () => {
           月次勤怠時間画面
         </Button>
         <Button onClick={resisterButton}>新規従業員登録</Button>
+        <Button onClick={() => navigate("/")}>ホーム画面</Button>
         <Portal>
           <Dialog.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
             {step === 1 ? (

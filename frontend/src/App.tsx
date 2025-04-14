@@ -10,6 +10,9 @@ import {
   Heading,
   Text,
   Table,
+  Portal,
+  Dialog,
+  Input,
 } from "@chakra-ui/react";
 import Loading from "./components/loading";
 import { Employee } from "./types/types";
@@ -17,6 +20,7 @@ import { Employee } from "./types/types";
 function App() {
   const [companyName, setCompanyName] = useState<string>("");
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -92,11 +96,32 @@ function App() {
           <Button onClick={() => navigate("/calender")} mr={2}>
             カレンダー
           </Button>
-          <Button onClick={() => navigate("/owner")} mr={2}>
+          <Button onClick={() => setOpen(true)} mr={2}>
             オーナー画面
           </Button>
         </Box>
       </Container>
+      <Portal>
+        <Dialog.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content className="sm:max-w-[425px]">
+              <Dialog.Header>
+                <Dialog.Title>オーナー画面にログイン</Dialog.Title>
+                <Dialog.Description>
+                  パスワードを入力してください
+                </Dialog.Description>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Input type="text"></Input>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Button onClick={() => navigate("/owner")}>ログイン</Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
+      </Portal>
     </Flex>
   );
 }

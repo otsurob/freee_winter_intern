@@ -79,6 +79,7 @@ const StampingHome = () => {
             </Table.Body>
           </Table.Root>
         </Box>
+        <Button onClick={() => navigate("/owner")}>オーナー画面</Button>
       </Container>
     </Flex>
   );

@@ -14,16 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-export type ResisterInfo = {
-  lineId: string;
-  lastName: string;
-  firstName: string;
-  lastNameLabel: string;
-  firstNameLabel: string;
-  birthDate: string;
-  entryDate: string;
-};
+import { ResisterInfo } from "@/types/types";
 
 const Owner = () => {
   const [step, setStep] = useState(1);

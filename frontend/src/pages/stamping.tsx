@@ -15,13 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 import Loading from "@/components/loading";
-
-enum EmployeeStatus {
-  working = "出勤中",
-  breaking = "休憩中",
-  leaving = "退勤中",
-  None = "未打刻",
-}
+import { EmployeeStatus } from "@/types/types";
 
 const Stamping = () => {
   const [searchParams] = useSearchParams();

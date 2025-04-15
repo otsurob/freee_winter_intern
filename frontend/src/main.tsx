@@ -11,6 +11,7 @@ import StampingHome from "./pages/stampingHome.tsx";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
 import CheckWorkTime from "./pages/checkWorkTime.tsx";
+import EditCalendar from "./pages/editCalender.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -24,6 +25,7 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<Stamping />} path="/owner/stamping" />
           <Route element={<Owner />} path="/owner" />
           <Route element={<CheckWorkTime />} path="/checkWorkTime" />
+          <Route element={<EditCalendar />} path="/editCalender" />
         </Routes>
       </BrowserRouter>
       <Toaster />

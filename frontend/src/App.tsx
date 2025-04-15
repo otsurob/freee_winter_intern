@@ -113,7 +113,10 @@ function App() {
                 </Dialog.Description>
               </Dialog.Header>
               <Dialog.Body>
-                <Input type="text"></Input>
+                <Input
+                  type="text"
+                  placeholder="未実装　ログインボタンで遷移可能"
+                ></Input>
               </Dialog.Body>
               <Dialog.Footer>
                 <Button onClick={() => navigate("/owner")}>ログイン</Button>

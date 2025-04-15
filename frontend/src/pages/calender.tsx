@@ -6,7 +6,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { useNavigate } from "react-router-dom";
 import { Button, Dialog, Portal, Text } from "@chakra-ui/react";
-import { getShiftData, ShiftData } from "@/api/gasApi";
+import { getShiftData } from "@/api/gasApi";
+import { ShiftData } from "@/types/types";
 
 // 24時間の配列 (0 ~ 23)
 const hours = Array.from({ length: 24 }, (_, i) => i);

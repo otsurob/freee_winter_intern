@@ -4,7 +4,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { useNavigate } from "react-router-dom";
 import { Button, Dialog, Portal, Text, Input } from "@chakra-ui/react"; // Inputを追加
-import { getShiftData, ShiftData } from "@/api/gasApi";
+import { getShiftData } from "@/api/gasApi";
+import { ShiftData } from "@/types/types";
 import TimeBar from "@/components/timeBar"; // ← 分けたと仮定
 
 const hours = Array.from({ length: 24 }, (_, i) => i);

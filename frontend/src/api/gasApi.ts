@@ -1,24 +1,6 @@
 import { GAS_API_URL } from "@/constants/constants";
+import { ShiftData, NewScheduleData  } from "@/types/types";
 
-/** 従業員ごとのシフト情報 */
-export interface EmployeeShift {
-  name: string;
-  shift: string;
-}
-
-/** 日付ごとのシフト情報 */
-export interface ShiftData {
-  date: string;
-  employees: EmployeeShift[];
-}
-
-/** シフト登録用のデータ(例) */
-export interface NewScheduleData {
-  empId: string;
-  name: string;
-  date: string;
-  shift: string;
-}
 
 function getRequestOptions(method: "GET" | "POST"): RequestInit {
   return {

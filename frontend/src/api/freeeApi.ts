@@ -1,5 +1,5 @@
 // src/api/freeeApi.ts
-import { ResisterInfo } from "@/pages/owner";
+import { ResisterInfo } from "@/types/types";
 import { COMPANY_ID, ACCESS_TOKEN, BASE_API_URL } from "../constants/constants";
 import { Employee } from "@/types/types";
 
